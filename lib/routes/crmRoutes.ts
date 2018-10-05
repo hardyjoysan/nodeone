@@ -1,50 +1,34 @@
 import {Request, Response} from "express";
+import {ContactController} from "../controllers/crmController";
 
 export class Routes{
+    public contactController: ContactController = new ContactController();
+    
+    
     public routes(app): void{
+
         app.route('/')
         .get((req: Request, res: Response) => {
             res.status(200).send({
-                message: 'GET request successfull.'
+                message: 'GET Direct home link'
             })
         })
 
-        //Contact
+        // Get all contacts
         app.route('/contact')
-        //GET - All Contacts
-        .get((req: Request, res: Response) => {
-            res.status(200).send({
-                message: 'Get request successfull.'
-            })
-        })
-        //POST - Create new contact
-        .post((req: Request, res: Response) => {
-            res.status(200).send({
-                message: 'POST request successfull.'
-            })
-        })
+            .get(this.contactController.getContacts)
 
-        // Contact detail
+        // Create a new contact
+        app.route('/contact')
+            .post(this.contactController.addNewContact);
+
         app.route('/contact/:contactId')
-        // GET - specific contact
-        .get((req: Request, res: Response) => {
-            res.status(200).send({
-                message: 'GET request successful'
-            })
-        })
-        // PUT - Update a contact
-        .put((req: Request, res: Response) => {
-            res.status(200).send({
-                message: 'PUT request successful'
-            })
-        })
-        // DELETE a contact
-        .delete((req: Request, res: Response) => {       
-            res.status(200).send({
-                message: 'DELETE request successful'
-            })
-        })
-
+            // get a specific contact
+            .get(this.contactController.getContactWithID)
+            // update a specific contact
+            .put(this.contactController.updateContact)
+            // delete a specific contact
+            .delete(this.contactController.deleteContact)
 
     }
 }
